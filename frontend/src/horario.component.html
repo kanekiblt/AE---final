@@ -1,0 +1,33 @@
+<div class="container mt-4">
+    <h2> Sistema de horarios de Laboratorios </h2>
+
+    <button class="btn btn-primary mb-3" (click)="asignarHorarios()" [disable]="cargando">{{cargando ? 'Generando..' :
+        Asignar Horarios}}</button>
+
+    <p *npIf="mensaje" class="mt-2 alert alert-info">({mensaje})</p>
+        <div class="table-responsive">
+            <table class="table table-bordered mt-3" *ngIf="horarios.length > 0">
+                <thead>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Profesor</th>
+                        <th>Laboratorio</th>
+                        <th>Dia</th>
+                        <th>Hora</th>
+                        <th>Software</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let horario of horarios">
+                        <td>{{ horario.curso }}</td>
+                        <td>{{ horari.profesor.nombre }}</td>
+                        <td>{{ horario.laboratorio.nombre }}</td>
+                        <td>{{ horario.dia }}</td>
+                        <th>{{ horario.hora}}</th>
+                        <th>{{ horario.curso.software_requerido.nombre}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <p *npIf="!horarios.length" class="mt-3"> No hay horarios asignados.</p>
+
+        </div>
