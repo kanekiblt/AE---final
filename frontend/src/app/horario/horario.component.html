@@ -1,0 +1,66 @@
+<div class="container">
+  <h2 class="text-center mb-4">Sistema de Asignación de Horarios</h2>
+
+  <button class="btn btn-primary mb-3" 
+          (click)="generarHorarios()" 
+          [disabled]="cargando">
+    <span *ngIf="cargando" class="spinner-border spinner-border-sm"></span>
+    {{ cargando ? 'Generando...' : 'Generar Horarios Automáticos' }}
+  </button>
+
+  <div *ngIf="mensaje" class="alert alert-{{tipoMensaje}}">
+    {{ mensaje }}
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Horarios Asignados</h5>
+    </div>
+    
+    <div class="card-body">
+      <!-- Estado de carga -->
+      <div *ngIf="cargando && horarios.length === 0" class="text-center py-4">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Cargando horarios...</p>
+      </div>
+
+      <!-- Sin datos -->
+      <div *ngIf="!cargando && horarios.length === 0" class="alert alert-info">
+        No hay horarios asignados. Haz click en "Generar Horarios" para comenzar.
+      </div>
+
+      <!-- Tabla de horarios -->
+      <div *ngIf="horarios.length > 0" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Curso</th>
+              <th>Profesor</th>
+              <th>Laboratorio</th>
+              <th>Software</th>
+              <th>Día</th>
+              <th>Hora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let horario of horarios">
+              <td>{{ horario.curso.nombre }}</td>
+              <td>{{ horario.curso.profesor.nombre }}</td>
+              <td>
+                {{ horario.laboratorio.nombre }}
+                <small class="text-muted d-block">Capacidad: {{ horario.laboratorio.capacidad }}</small>
+              </td>
+              <td>
+                <span class="badge bg-primary">
+                  {{ horario.curso.software_requerido.nombre }}
+                </span>
+              </td>
+              <td>{{ horario.dia }}</td>
+              <td>{{ horario.hora_inicio | slice:0:5 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

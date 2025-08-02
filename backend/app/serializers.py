@@ -1,38 +1,44 @@
-# backend/app/serializers.py
 from rest_framework import serializers
-from .models import Profesor, Curso, Laboratorio, Software, HorarioAsignado
+from .models import HorarioAsignado, Curso, Laboratorio, Profesor, Software
 
-class profesorSerializer(serializers.ModelSerializer):
+class ProfesorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profesor
-        fields = '__all__'
+        fields = ['id', 'nombre', 'disponibilidad']
 
-class softwareSerializer(serializers.ModelSerializer):
-    
+class SoftwareSerializer(serializers.ModelSerializer):
     class Meta:
         model = Software
-        fields = '__all__'
+        fields = ['id', 'nombre']
 
-class laboratorioSerializer(serializers.ModelSerializer):
-    software = softwareSerializer(many=True, read_only=True)
-
+class LaboratorioSerializer(serializers.ModelSerializer):
+    software = SoftwareSerializer(many=True)
+    
     class Meta:
         model = Laboratorio
-        fields = '__all__'
+        fields = ['id', 'nombre', 'capacidad', 'software']
 
-class cursoSerializer(serializers.ModelSerializer):
-    Profesor = profesorSerializer(read_only=True)
-    software_requerido = softwareSerializer(read_only=True)
-
+class CursoSerializer(serializers.ModelSerializer):
+    profesor = ProfesorSerializer()
+    software_requerido = SoftwareSerializer()
+    
     class Meta:
         model = Curso
-        fields = '__all__'
+        fields = [
+            'id', 'nombre', 'profesor', 'peso', 
+            'software_requerido', 'total_alumnos', 'prerequisito'
+        ]
 
-class horarioAsignadoSerializer(serializers.ModelSerializer):
-    curso = cursoSerializer(read_only=True)
-    Laboratorio = laboratorioSerializer(read_only=True)
-
+class HorarioAsignadoSerializer(serializers.ModelSerializer):
+    curso = CursoSerializer()
+    laboratorio = LaboratorioSerializer()
+    
     class Meta:
         model = HorarioAsignado
-        fields = '__all__'
-    
+        fields = ['id', 'curso', 'laboratorio', 'dia', 'hora_inicio']
+        depth = 1
+
+class CreateHorarioAsignadoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HorarioAsignado
+        fields = ['curso', 'laboratorio', 'dia', 'hora_inicio']

@@ -3,6 +3,7 @@ from django.db import models
 
 class Profesor(models.Model):
     nombre = models.CharField(max_length=100)
+    disponibilidad = models.JSONField(default=list) 
 
     def __str__(self):
         return self.nombre
@@ -39,9 +40,9 @@ class HorarioAsignado(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     laboratorio = models.ForeignKey(Laboratorio, on_delete=models.CASCADE)
     hora_inicio = models.TimeField()
-    dia = models.CharField(max_length=10) #lunes a viernes 
+    dia = models.CharField(max_length=10)
+    
     def __str__(self):
-        return f"{self.curso.nombre} en {self.Laboratorio.nombre} el {self.dia} a las {self.hora_inicio}"   
-
+        return f"{self.curso.nombre} en {self.laboratorio.nombre} el {self.dia} a las {self.hora_inicio}"
 
     

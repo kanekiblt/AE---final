@@ -1,21 +1,51 @@
-# backend/app/views.py
-from rest_framework.views import APIView
+from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework import status
-from .models import HorarioAsignado 
-from .serializers import horarioAsignadoSerializer
-from services.asignadorGenetico import asignar_horarios
+from rest_framework.views import APIView
+from .models import HorarioAsignado, Curso, Laboratorio
+from .serializers import HorarioAsignadoSerializer
+from .asignadorGenetico import asignar_horarios_geneticos
+from django.db import transaction
 
-class AsignadorHorariosView(APIView):
-    def post(self, request):
-        asignar_horarios()  # Llama a la función para asignar horarios
-        return Response({"message": "Horarios asignados correctamente."}, status=status.HTTP_200_OK)    
+class HorarioListView(generics.ListAPIView):
+    serializer_class = HorarioAsignadoSerializer
     
-    class HorarioListView(APIView):
-        def get(self, request):
-            horarios = HorarioAsignado.objects.all()
-            serializer = horarioAsignadoSerializer(horarios, many=True)
-            return Response(serializer.data)
+    def get_queryset(self):
+        return HorarioAsignado.objects.select_related(
+            'curso', 'laboratorio', 'curso__profesor', 'curso__software_requerido'
+        ).all()
 
-  
-        
+class GenerarHorariosView(APIView):
+    @transaction.atomic
+    def post(self, request):
+        try:
+            # Limpiar horarios existentes
+            HorarioAsignado.objects.all().delete()
+            
+            # Generar nuevos horarios
+            horarios_generados = asignar_horarios_geneticos()
+            
+            # Crear horarios en la base de datos
+            horarios_creados = []
+            for horario in horarios_generados:
+                serializer = HorarioAsignadoSerializer(data=horario)
+                if serializer.is_valid():
+                    horario_obj = serializer.save()
+                    horarios_creados.append(horario_obj)
+                else:
+                    raise Exception(serializer.errors)
+            
+            return Response({
+                "status": "success",
+                "message": f"{len(horarios_creados)} horarios generados correctamente",
+                "data": HorarioAsignadoSerializer(horarios_creados, many=True).data
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response({
+                "status": "error",
+                "message": str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+class HorarioDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = HorarioAsignado.objects.all()
+    serializer_class = HorarioAsignadoSerializer
