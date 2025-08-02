@@ -56,7 +56,7 @@ def mutar(asignaciones, cursos, laboratorios):
     idx = random.randint(0, len(nuevo) - 1)
     curso = nuevo[idx][0]
     
-    # Buscar asignación válida
+    # Busca una asignación válida
     for _ in range(10):  # Máximo 10 intentos
         lab = random.choice(laboratorios)
         dia = random.choice(dias)
@@ -95,7 +95,6 @@ def asignar_horarios_geneticos():
     
     mejor_solucion = hill_climbing(cursos, laboratorios)
     
-    # Convertir a formato para API
     return [{
         'curso': curso.id,
         'laboratorio': lab.id,
