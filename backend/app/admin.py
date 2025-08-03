@@ -29,7 +29,8 @@ class HorarioAsignadoAdmin(admin.ModelAdmin):
     list_filter = ('dia', 'laboratorio')
     search_fields = ('curso__nombre', 'laboratorio__nombre')
     date_hierarchy = None
-
+  
+  
 admin.site.register(Profesor, ProfesorAdmin)
 admin.site.register(Laboratorio, LaboratorioAdmin)
 admin.site.register(Software, SoftwareAdmin)
