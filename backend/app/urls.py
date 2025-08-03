@@ -1,4 +1,4 @@
-# backend/app/urls.py
+# backend/app/aurls.py
 from django.urls import path
 from .views import HorarioListView, GenerarHorariosView, HorarioDetailView
 

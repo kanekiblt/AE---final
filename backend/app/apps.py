@@ -1,3 +1,5 @@
+# backend/app/apps.py
+
 from django.apps import AppConfig
 
 class AppConfig(AppConfig):

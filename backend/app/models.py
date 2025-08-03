@@ -1,6 +1,5 @@
 # backend/app/models.py
 from django.db import models
-
 class Profesor(models.Model):
     nombre = models.CharField(max_length=100)
     disponibilidad = models.JSONField(default=list) 

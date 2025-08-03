@@ -1,9 +1,9 @@
-# backend/management/commands/asignar_horarios.py
 from django.core.management.base import BaseCommand
-from backend.app.asignadorGenetico import asignadorGenetico
+from app.asignadorGenetico import asignar_horarios_geneticos  # ← Corrección aquí
+
 class Command(BaseCommand):
     help = 'Asigna horarios a los cursos en los laboratorios disponibles'
 
     def handle(self, *args, **kwargs):
-        asignadorGenetico()
+        asignar_horarios_geneticos()  # ← Corrección aquí
         self.stdout.write(self.style.SUCCESS('Horarios asignados correctamente.'))

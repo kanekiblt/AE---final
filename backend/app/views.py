@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import HorarioAsignado, Curso, Laboratorio
-from .serializers import HorarioAsignadoSerializer
+from .serializers import HorarioAsignadoSerializer, CreateHorarioAsignadoSerializer  
 from .asignadorGenetico import asignar_horarios_geneticos
 from django.db import transaction
 
@@ -24,10 +24,9 @@ class GenerarHorariosView(APIView):
             # Generar nuevos horarios
             horarios_generados = asignar_horarios_geneticos()
             
-            # Crear horarios en la base de datos
             horarios_creados = []
             for horario in horarios_generados:
-                serializer = HorarioAsignadoSerializer(data=horario)
+                serializer = CreateHorarioAsignadoSerializer(data=horario)  
                 if serializer.is_valid():
                     horario_obj = serializer.save()
                     horarios_creados.append(horario_obj)

@@ -1,3 +1,5 @@
+# backend/requirements.py
+
 asgiref==3.9.1
 Django==5.2.4
 django-cors-headers==4.7.0

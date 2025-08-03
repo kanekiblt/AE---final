@@ -1,3 +1,5 @@
+# backend/app/serializers.py
+
 from rest_framework import serializers
 from .models import HorarioAsignado, Curso, Laboratorio, Profesor, Software
 
