@@ -18,10 +18,8 @@ class GenerarHorariosView(APIView):
     @transaction.atomic
     def post(self, request):
         try:
-            # Limpiar horarios existentes
             HorarioAsignado.objects.all().delete()
             
-            # Generar nuevos horarios
             horarios_generados = asignar_horarios_geneticos()
             
             horarios_creados = []
